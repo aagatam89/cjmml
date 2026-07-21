@@ -34,23 +34,66 @@ h1{font-size:30px;line-height:1.15;margin:7px 0 8px}.intro{max-width:900px;color
 .form-actions{display:flex;gap:8px;margin-top:18px}.hint{font-size:10px;font-weight:400;color:#9aa1ac}
 .empty{color:#9aa1ac;font-size:12px;border:1px dashed #ccd2da;border-radius:10px;padding:12px}.note{margin-top:16px;color:#858d99;font-size:12px}
 @media(max-width:900px){.hero,.board{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.col+.col{border-left:0;border-top:1px dashed var(--line);padding:14px 0 0}.toolbar{align-items:flex-start;flex-direction:column}}
+
+/* 2026 business showcase */
+:root{--bg:#f3f5fa;--card:#fff;--ink:#101424;--soft:#606a7d;--line:#dfe4ee;--violet:#7657ff;--cyan:#27c7d7;--lime:#b9ed6a;--green:#26a269}
+body{background:
+ radial-gradient(circle at 8% 2%,rgba(118,87,255,.12),transparent 27rem),
+ radial-gradient(circle at 94% 20%,rgba(39,199,215,.11),transparent 25rem),var(--bg)}
+.wrap{max-width:1480px;padding:24px 28px 80px}
+.cover{position:relative;overflow:hidden;min-height:340px;padding:46px 48px;border-radius:28px;color:#fff;background:linear-gradient(125deg,#101426 0%,#202552 52%,#34206b 100%);box-shadow:0 24px 70px rgba(25,25,66,.22);isolation:isolate}
+.cover:before,.cover:after{content:"";position:absolute;border-radius:50%;filter:blur(2px);z-index:-1}.cover:before{width:360px;height:360px;right:-70px;top:-120px;background:radial-gradient(circle,rgba(39,199,215,.55),rgba(39,199,215,0) 68%);animation:float 9s ease-in-out infinite}.cover:after{width:310px;height:310px;right:220px;bottom:-220px;background:radial-gradient(circle,rgba(185,237,106,.34),rgba(185,237,106,0) 70%);animation:float 11s ease-in-out infinite reverse}
+.cover-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,.7fr);gap:50px;align-items:center}.cover .eyebrow{color:#b9c5ff}.cover h1{font-size:clamp(36px,4vw,62px);letter-spacing:-.045em;max-width:850px;margin:12px 0 18px}.cover .intro{font-size:17px;max-width:760px;color:#d7dcf2}
+.promise{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.promise span{padding:8px 12px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(255,255,255,.08);backdrop-filter:blur(8px);font-size:12px}
+.orbit{position:relative;width:270px;height:270px;margin:auto}.orbit-core{position:absolute;inset:72px;border-radius:50%;display:grid;place-items:center;text-align:center;background:linear-gradient(145deg,#866bff,#5c39df);box-shadow:0 0 0 16px rgba(255,255,255,.05),0 18px 50px rgba(0,0,0,.3);font-size:13px;font-weight:700;animation:breathe 4s ease-in-out infinite}
+.orbit-ring{position:absolute;inset:18px;border:1px solid rgba(255,255,255,.22);border-radius:50%;animation:spin 22s linear infinite}.orbit-ring:before,.orbit-ring:after{content:"";position:absolute;width:14px;height:14px;border-radius:50%;background:var(--cyan);box-shadow:0 0 22px var(--cyan)}.orbit-ring:before{top:28px;left:27px}.orbit-ring:after{right:-6px;top:118px;background:var(--lime);box-shadow:0 0 22px var(--lime)}
+.hero{margin:18px 0}.hero>div{position:relative;border:0;border-radius:18px;padding:19px 21px;box-shadow:0 10px 32px rgba(28,36,78,.08)}.hero>div:first-child:before,.hero>div:last-child:before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:4px;border-radius:4px;background:var(--cyan)}.hero>div:last-child:before{background:var(--violet)}
+.metrics{margin:18px 0 20px}.metric{position:relative;overflow:hidden;border:0;border-radius:18px;padding:18px 20px;box-shadow:0 10px 30px rgba(28,36,78,.07);animation:rise .55s both}.metric:nth-child(2){animation-delay:.06s}.metric:nth-child(3){animation-delay:.12s}.metric:nth-child(4){animation-delay:.18s}.metric:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-38px;top:-38px;background:linear-gradient(145deg,rgba(118,87,255,.12),rgba(39,199,215,.05))}.metric .value{font-size:32px;letter-spacing:-.04em}.metric .caption{font-size:12px}
+.tabs{margin:22px 0 10px;padding:5px;background:rgba(255,255,255,.72);border:1px solid rgba(217,223,235,.9);border-radius:14px;width:max-content;max-width:100%;backdrop-filter:blur(12px)}.tab,.filter,.action,.primary{transition:transform .16s,box-shadow .16s,background .16s}.tab{border:0;background:transparent;border-radius:10px}.tab.on{background:#171a2b;box-shadow:0 7px 18px rgba(16,20,36,.18)}.tab:hover,.filter:hover,.action:hover,.primary:hover{transform:translateY(-1px)}
+.toolbar{padding:8px 0 14px}.filter{border:0;background:rgba(255,255,255,.8);box-shadow:inset 0 0 0 1px var(--line)}.filter.on{background:#171a2b;box-shadow:none}.primary{background:linear-gradient(135deg,#7657ff,#5d3ee0);border:0;box-shadow:0 8px 20px rgba(118,87,255,.25)}
+.journey-title{display:flex;align-items:end;justify-content:space-between;margin:26px 2px 12px}.journey-title h2{font-size:22px;margin:0}.journey-title p{margin:0;color:var(--soft);font-size:12px}
+.graph-shell{position:relative;border-radius:26px;padding:30px 24px 26px;background:rgba(255,255,255,.76);box-shadow:0 18px 55px rgba(25,32,68,.09);backdrop-filter:blur(16px);overflow:hidden}
+.board{position:relative;border:0;padding:0;background:transparent;box-shadow:none;backdrop-filter:none;overflow:visible;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}.board:before{content:"";position:absolute;left:10%;right:10%;top:47px;height:3px;background:linear-gradient(90deg,#7657ff,#488bea,#27c7d7,#65bd79);border-radius:9px;opacity:.5}
+.col{position:relative;z-index:1;min-width:0;text-align:center}.col+.col{border:0;padding:0}.stage-node{position:relative;width:100%;min-height:96px;border:0;background:transparent;cursor:pointer;font-family:inherit;color:var(--ink)}.step{margin:auto;display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#171a2b;color:#fff;font-size:11px;box-shadow:0 0 0 8px #f1f2f8;transition:.25s}.stage-node:hover .step,.stage-node.open .step{transform:scale(1.12);background:#6849ed;box-shadow:0 0 0 8px #ebe7ff,0 8px 24px rgba(104,73,237,.28)}.stage{margin:13px 0 0;font-size:15px;font-weight:700}.stage-count{display:inline-flex;margin-left:5px;min-width:21px;height:21px;align-items:center;justify-content:center;border-radius:999px;background:#ebe8ff;color:#5d43cb;font-size:10px}.chevron{display:block;margin:5px auto 0;color:#80899b;font-size:11px;transition:.2s}.stage-node.open .chevron{transform:rotate(180deg)}
+.branches{position:relative;display:grid;gap:10px;padding-top:28px;max-height:0;opacity:0;overflow:hidden;transform:translateY(-8px);transition:max-height .48s ease,opacity .3s,transform .4s}.branches.open{max-height:1200px;opacity:1;overflow:visible;transform:none}.branches:before{content:"";position:absolute;top:0;left:50%;width:2px;height:28px;background:#cfd5e3}.branch{position:relative}.branch:before{content:"";position:absolute;top:-10px;left:50%;width:2px;height:10px;background:#cfd5e3}
+.card{position:relative;border:1px solid rgba(213,219,231,.95)!important;border-radius:13px!important;padding:11px 12px!important;background:rgba(255,255,255,.98)!important;box-shadow:0 4px 14px rgba(30,38,76,.055);animation:rise .38s both;text-align:left;width:100%;cursor:pointer}.card:before{content:"";position:absolute;left:-1px;top:11px;bottom:11px;width:4px;border-radius:0 4px 4px 0}.card[data-type=ml]:before{background:#f19a55}.card[data-type=bot]:before{background:#4f8fe8}.card[data-type=kc]:before{background:#df6aa8}.card[data-type=crm]:before{background:#54b86c}.card:hover{transform:translateY(-3px);box-shadow:0 12px 26px rgba(27,34,72,.12);border-color:rgba(118,87,255,.35)!important}.name{font-size:13px;margin:7px 0 4px}.tag{border-radius:999px;padding:3px 7px;background:#272c41}.card-meta{display:flex;gap:8px;align-items:center;justify-content:space-between}.card .reach{border:0;background:transparent;padding:0;margin:0;color:#737d90;font-size:10px}.card .status{font-size:10px}.card .facts{display:none}.drawer{border-radius:22px 0 0 22px}.drawer-head{background:linear-gradient(145deg,#f2f0ff,#edf9fb)}
+.graph-actions{display:flex;justify-content:center;margin-top:20px}.graph-toggle{border:1px solid var(--line);background:#fff;border-radius:10px;padding:8px 13px;font:600 12px Onest;cursor:pointer}
+.view-switch{display:inline-flex;gap:4px;padding:5px;border-radius:13px;background:#e9ecf3;margin:24px 0 0}.view-btn{border:0;background:transparent;border-radius:9px;padding:9px 15px;font:600 12px Onest;color:var(--soft);cursor:pointer}.view-btn.on{background:#fff;color:var(--ink);box-shadow:0 5px 15px rgba(25,32,68,.1)}
+.agenda{margin:20px 0;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.agenda-item{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:17px;padding:18px 19px;box-shadow:0 8px 26px rgba(28,36,78,.06)}.agenda-icon{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;margin-bottom:12px;font-weight:800;color:#fff}.agenda-item:nth-child(1) .agenda-icon{background:#ed9650}.agenda-item:nth-child(2) .agenda-icon{background:#4d8de4}.agenda-item:nth-child(3) .agenda-icon{background:linear-gradient(135deg,#7657ff,#27c7d7)}.agenda-item h3{font-size:15px;margin:0 0 6px}.agenda-item p{font-size:12px;color:var(--soft);margin:0;line-height:1.55}.agenda-flow{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8b94a5;margin-top:11px}
+.type-filters{display:flex;gap:6px;flex-wrap:wrap;padding-left:10px;border-left:1px solid var(--line)}.type-filter{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 11px;font:600 11px Onest;color:var(--soft);cursor:pointer}.type-filter.on{background:#171a2b;color:#fff;border-color:#171a2b}.type-dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px}
+.graph-shell.columns .board:before{display:none}.graph-shell.columns .board{gap:14px}.graph-shell.columns .col{text-align:left}.graph-shell.columns .stage-node{pointer-events:none;text-align:left;min-height:72px}.graph-shell.columns .step{margin:0;width:30px;height:30px;box-shadow:none}.graph-shell.columns .stage{margin:9px 0 0;display:block}.graph-shell.columns .chevron{display:none}.graph-shell.columns .branches{max-height:none;opacity:1;overflow:visible;transform:none;padding-top:0}.graph-shell.columns .branches:before,.graph-shell.columns .branch:before{display:none}.graph-shell.columns .graph-actions{display:none}
+@keyframes float{50%{transform:translate(-18px,18px) scale(1.05)}}@keyframes spin{to{transform:rotate(360deg)}}@keyframes breathe{50%{transform:scale(1.05);box-shadow:0 0 0 22px rgba(255,255,255,.035),0 22px 55px rgba(0,0,0,.34)}}@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(max-width:900px){.wrap{padding:14px}.cover{padding:32px 24px;min-height:0}.cover-grid{grid-template-columns:1fr}.orbit{display:none}.tabs{width:100%}.graph-shell{padding:20px 16px}.board{grid-template-columns:1fr;gap:0}.board:before{left:20px;right:auto;top:28px;bottom:28px;width:3px;height:auto}.col{text-align:left;padding-left:52px}.col+.col{padding:20px 0 0 52px}.stage-node{min-height:64px;text-align:left}.step{position:absolute;left:-50px;top:3px;margin:0}.stage{margin:0}.chevron{margin:5px 0}.branches{padding-top:12px}.branches:before,.branch:before{display:none}.cover h1{font-size:38px}}
+@media(max-width:700px){.agenda{grid-template-columns:1fr}.type-filters{padding:10px 0 0;border-left:0;border-top:1px solid var(--line)}}
+@media(max-width:560px){.metrics{grid-template-columns:1fr 1fr}.cover h1{font-size:32px}.hero{grid-template-columns:1fr}.tabs{display:grid}.tab{text-align:left}.actions{width:100%}}
 </style>
 </head>
 <body><main class="wrap">
-  <div class="eyebrow">Real Estate · CRM-маркетинг</div>
-  <h1>Карта ML-моделей и коммуникаций</h1>
-  <div class="intro">Портфель решений по сегментам и этапам клиентского пути: от определения потребности до продления и удержания.</div>
+  <header class="cover"><div class="cover-grid"><div>
+    <div class="eyebrow">Real Estate · Intelligent Growth System</div>
+    <h1>От модели — к следующему лучшему действию</h1>
+    <div class="intro">Единый портфель ML, колл-ботов и CRM-механик, который помогает вовремя понять потребность пользователя, выбрать канал и довести до результата.</div>
+    <div class="promise"><span>Понятно бизнесу</span><span>Видно готовность</span><span>Измерим охват и эффект</span></div>
+  </div><div class="orbit" aria-hidden="true"><div class="orbit-ring"></div><div class="orbit-core">Next best<br>action</div></div></div></header>
   <section class="hero">
     <div><div class="label">Статус</div><b>Часть решений уже работает, часть проходит тестирование или находится в плане.</b></div>
     <div><div class="label">Амбиция</div><b>Персональное автоматизированное касание для каждого пользователя на всём клиентском пути.</b></div>
   </section>
+  <section class="agenda" aria-label="Как устроена система">
+    <article class="agenda-item"><div class="agenda-icon">ML</div><h3>ML-модели</h3><p>Находят пользователей с нужной склонностью или риском и отвечают на вопрос: <b>кому и что предложить</b>.</p><div class="agenda-flow">Сигналы → скор → аудитория</div></article>
+    <article class="agenda-item"><div class="agenda-icon">☎</div><h3>Колл-боты</h3><p>Масштабируют персональный разговор: информируют, квалифицируют намерение и передают сложные случаи человеку.</p><div class="agenda-flow">Аудитория → диалог → результат</div></article>
+    <article class="agenda-item"><div class="agenda-icon">AI</div><h3>AI-автоматизация</h3><p>Связывает модели и каналы в единый сценарий: выбирает следующее лучшее действие, учитывая статус и историю касаний.</p><div class="agenda-flow">Решение → канал → next best action</div></article>
+  </section>
   <section class="metrics" id="metrics"></section>
   <nav class="tabs" id="tabs"></nav>
   <div class="toolbar">
-    <div class="filters"><button class="filter on" data-filter="all">Все</button><button class="filter" data-filter="gap">Что внедрить</button></div>
+    <div class="filters"><button class="filter on" data-filter="all">Все статусы</button><button class="filter" data-filter="gap">Что внедрить</button><div class="type-filters" id="typeFilters"><button class="type-filter on" data-type-filter="all">Все типы</button><button class="type-filter" data-type-filter="ml"><span class="type-dot" style="background:#ed9650"></span>ML</button><button class="type-filter" data-type-filter="bot"><span class="type-dot" style="background:#4d8de4"></span>Колл-боты</button><button class="type-filter" data-type-filter="crm"><span class="type-dot" style="background:#54b86c"></span>AI / CRM</button><button class="type-filter" data-type-filter="kc"><span class="type-dot" style="background:#df6aa8"></span>КЦ</button></div></div>
     <div class="actions"><span class="source" id="source">Загружаю актуальные данные…</span><button class="primary" id="add">＋ Добавить</button><a class="action" href="https://docs.google.com/spreadsheets/d/1zcgSjI5zD7TguYItZIAWjvYZD5QzVyacsnWZojfq0F8/edit?gid=2064400045#gid=2064400045" target="_blank">Открыть таблицу</a><button class="action" id="refresh">↻ Обновить</button></div>
   </div>
-  <section class="board" id="board"></section>
+  <div class="view-switch" role="tablist" aria-label="Представление карты"><button class="view-btn on" id="graphView" role="tab" aria-selected="true">Схема CJM</button><button class="view-btn" id="columnsView" role="tab" aria-selected="false">Колонки</button></div>
+  <div class="journey-title"><div><div class="label">Клиентский путь</div><h2>Где и как мы влияем</h2></div><p>Нажмите на механику, чтобы увидеть логику и результат</p></div>
+  <section class="graph-shell" id="graphShell"><div class="board" id="board"></div><div class="graph-actions"><button class="graph-toggle" id="graphToggle">Раскрыть весь путь</button></div></section>
   <div class="note">Охват считается корректно только после заполнения поля reach в базе. Значения разных механик нельзя складывать без дедупликации пользователей.</div>
 </main>
 <div class="scrim" id="scrim"></div>
@@ -60,26 +103,27 @@ const API='https://script.google.com/macros/s/AKfycbxp4Yicws0Es3QvYoqbpUXppw6-cn
 const TOKEN='CHANGE_ME_secret';
 const META={ml:{name:'M / L',desc:'Средний и крупный'},sxs:{name:'S / XS',desc:'Малый сегмент'},private:{name:'Private',desc:'Частные лица'}};
 const STAGES=[['pre','01','До размещения'],['submit','02','Этап подачи'],['active','03','Период размещения'],['complete','04','Завершение / продление']];
-const TYPES={ml:'ML',bot:'Колл-бот',kc:'КЦ',crm:'CRM / промо'};
+const TYPES={ml:'ML-модель',bot:'Колл-бот',kc:'КЦ',crm:'AI / CRM-автоматизация'};
 const STATUS={live:['Готово','#269354'],inwork:['В работе','#d89e21'],almost:['Почти готов','#3f72b8'],planned:['Планируется','#99a1ad']};
-let rows=[],segment='ml',filter='all',connected=false,current=null;
+let rows=[],segment='ml',filter='all',typeFilter='all',connected=false,current=null,openStages=new Set(),viewMode='graph';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brief=(s,n=118)=>{s=String(s||'Уточняется');return s.length>n?s.slice(0,n-1)+'…':s};
 function render(){
   const present=[...new Set(rows.map(x=>x.segment))]; if(!present.includes(segment))segment=present[0]||'ml';
   tabs.innerHTML=present.map(id=>'<button class="tab '+(id===segment?'on':'')+'" data-seg="'+esc(id)+'">'+esc(META[id]?.name||id)+' · '+esc(META[id]?.desc||'')+'</button>').join('');
-  const sr=rows.filter(x=>x.segment===segment), shown=filter==='gap'?sr.filter(x=>x.status!=='live'):sr;
-  const counts={live:0,inwork:0,almost:0,planned:0};sr.forEach(x=>{if(x.status in counts)counts[x.status]++});
-  const reachFilled=sr.filter(x=>String(x.reach||'').trim()).length;
+  const sr=rows.filter(x=>x.segment===segment), typed=typeFilter==='all'?sr:sr.filter(x=>x.type===typeFilter), shown=filter==='gap'?typed.filter(x=>x.status!=='live'):typed;
+  const counts={live:0,inwork:0,almost:0,planned:0};typed.forEach(x=>{if(x.status in counts)counts[x.status]++});
+  const reachFilled=typed.filter(x=>String(x.reach||'').trim()).length;
   metrics.innerHTML=
-   '<div class="metric"><div class="value">'+sr.length+'</div><div class="caption">механик в сегменте</div></div>'+
+   '<div class="metric"><div class="value">'+typed.length+'</div><div class="caption">механик в выбранном срезе</div></div>'+
    '<div class="metric"><div class="value" style="color:var(--green)">'+counts.live+'</div><div class="caption">готово / работает</div></div>'+
    '<div class="metric"><div class="value">'+(counts.inwork+counts.almost)+'</div><div class="caption">в работе / почти готово</div></div>'+
-   '<div class="metric"><div class="value">'+(reachFilled?reachFilled+' / '+sr.length:'—')+'</div><div class="caption">карточек с заполненным охватом</div></div>';
+   '<div class="metric"><div class="value">'+(reachFilled?reachFilled+' / '+typed.length:'—')+'</div><div class="caption">карточек с заполненным охватом</div></div>';
   board.innerHTML=STAGES.map(([id,num,title])=>{
     const list=shown.filter(x=>x.stage===id).sort((a,b)=>(+a.order||99)-(+b.order||99));
     const cards=list.length?list.map(card).join(''):'<div class="empty">Нет механик</div>';
-    return '<div class="col"><div class="step">'+num+'</div><div class="stage">'+title+'</div><div class="cards">'+cards+'</div></div>';
+    const opened=viewMode==='columns'||openStages.has(id);
+    return '<div class="col"><button type="button" class="stage-node '+(opened?'open':'')+'" data-stage="'+id+'" aria-expanded="'+opened+'"><span class="step">'+num+'</span><span class="stage">'+title+' <span class="stage-count">'+list.length+'</span></span><span class="chevron">⌄</span></button><div class="branches '+(opened?'open':'')+'">'+(list.length?list.map(x=>'<div class="branch">'+card(x)+'</div>').join(''):'<div class="empty">Механик пока нет</div>')+'</div></div>';
   }).join('');
 }
 function card(m){
@@ -87,10 +131,8 @@ function card(m){
   const expectation=m.expectation||m.what||'Уточняется';
   const result=m.result||m.need||'Уточняется';
   const reach=m.reach||'Охват уточняется';
-  return '<article class="card" data-key="'+rows.indexOf(m)+'" data-type="'+esc(m.type)+'"><div class="top"><span class="tag">'+esc(TYPES[m.type]||m.type)+'</span><span class="dot" style="background:'+st[1]+'"></span></div>'+
-   '<div class="name">'+esc(m.name)+'</div><div class="status">'+esc(st[0])+'</div>'+
-   '<div class="facts"><div class="fact"><strong>Ожидание:</strong> '+esc(brief(expectation))+'</div><div class="fact"><strong>Результат:</strong> '+esc(brief(result))+'</div></div>'+
-   '<div class="reach">◉ '+esc(reach)+'</div></article>';
+  return '<button type="button" class="card" data-key="'+rows.indexOf(m)+'" data-type="'+esc(m.type)+'" aria-label="'+esc(m.name)+'. '+esc(st[0])+'. Открыть подробности"><div class="top"><span class="tag">'+esc(TYPES[m.type]||m.type)+'</span><span class="dot" style="background:'+st[1]+'"></span></div>'+
+   '<div class="name">'+esc(m.name)+'</div><div class="card-meta"><span class="status">'+esc(st[0])+'</span><span class="reach">◉ '+esc(reach)+'</span></div></button>';
 }
 function openDrawer(){drawer.classList.add('on');scrim.classList.add('on')}
 function closeDrawer(){drawer.classList.remove('on');scrim.classList.remove('on');current=null}
@@ -116,9 +158,13 @@ async function write(action,payload){
  if(!connected)return alert('Нет подключения к базе');
  const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,token:TOKEN},payload))});const data=await res.json();if(!data.ok)return alert(data.error||'Ошибка записи');rows=data.rows||[];render();
 }
-tabs.onclick=e=>{const b=e.target.closest('[data-seg]');if(b){segment=b.dataset.seg;render()}};
-board.onclick=e=>{const el=e.target.closest('.card');if(el)showCard(rows[+el.dataset.key])};
+tabs.onclick=e=>{const b=e.target.closest('[data-seg]');if(b){segment=b.dataset.seg;openStages.clear();render()}};
+board.onclick=e=>{const stage=e.target.closest('[data-stage]');if(stage&&viewMode==='graph'){const id=stage.dataset.stage;openStages.has(id)?openStages.delete(id):openStages.add(id);render();return}const el=e.target.closest('.card');if(el)showCard(rows[+el.dataset.key])};
+graphToggle.onclick=()=>{const allOpen=STAGES.every(x=>openStages.has(x[0]));openStages=allOpen?new Set():new Set(STAGES.map(x=>x[0]));graphToggle.textContent=allOpen?'Раскрыть весь путь':'Свернуть весь путь';render()};
+function setView(mode){viewMode=mode;graphShell.classList.toggle('columns',mode==='columns');graphView.classList.toggle('on',mode==='graph');columnsView.classList.toggle('on',mode==='columns');graphView.setAttribute('aria-selected',mode==='graph');columnsView.setAttribute('aria-selected',mode==='columns');render()}
+graphView.onclick=()=>setView('graph');columnsView.onclick=()=>setView('columns');
 document.querySelector('.filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x===b));render()};
+typeFilters.onclick=e=>{const b=e.target.closest('[data-type-filter]');if(!b)return;typeFilter=b.dataset.typeFilter;document.querySelectorAll('.type-filter').forEach(x=>x.classList.toggle('on',x===b));render()};
 close.onclick=scrim.onclick=closeDrawer;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});add.onclick=()=>showForm(null);refresh.onclick=load;
 async function load(){
   try{
