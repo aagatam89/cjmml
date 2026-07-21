@@ -1,447 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Карта ML-моделей и колл-ботов · по сегментам и этапам</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Карта ML-моделей и коммуникаций</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#f4f5f7;--surface:#ffffff;--ink:#13161c;--ink-soft:#5b626e;--ink-faint:#9aa1ad;
-    --line:#e4e7ec;--line-strong:#d2d7df;
-    --ml:#f6c9a4;--ml-deep:#c87b3f;--ml-bg:#fdf1e8;
-    --bot:#bcd4f5;--bot-deep:#3d6fb0;--bot-bg:#eef4fd;
-    --kc:#f3c4dd;--kc-deep:#b04a82;--kc-bg:#fceef5;
-    --crm:#bfe6c4;--crm-deep:#3f8f53;--crm-bg:#edf8ef;
-    --live:#2e9e5b;--inwork:#e0a82e;--almost:#3d6fb0;--planned:#9aa1ad;
-    --radius:14px;
-    --shadow:0 1px 2px rgba(16,22,33,.04), 0 6px 20px rgba(16,22,33,.06);
-    --shadow-lg:0 8px 40px rgba(16,22,33,.16);
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;padding:0;}
-  body{background:var(--bg);color:var(--ink);font-family:'Onest',system-ui,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
-  .wrap{max-width:1340px;margin:0 auto;padding:28px 26px 80px;}
-  header.top{margin-bottom:20px;}
-  .eyebrow{font-family:'Spline Sans Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:8px;}
-  h1{font-size:27px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px;line-height:1.15;}
-  .sub{color:var(--ink-soft);max-width:800px;font-size:14px;}
-
-  .source-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0 4px;padding:9px 13px;border:1px solid var(--line);border-radius:11px;background:var(--surface);box-shadow:var(--shadow);}
-  .src-badge{display:flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:8px;}
-  .src-badge .dot{width:8px;height:8px;border-radius:50%;}
-  .src-seed{background:#f1f2f4;color:var(--ink-soft);}        .src-seed .dot{background:var(--planned);}
-  .src-sheet{background:var(--crm-bg);color:#2e6b3f;}          .src-sheet .dot{background:var(--live);}
-  .src-err{background:#fff8ea;color:#7a5a14;}                  .src-err .dot{background:var(--inwork);}
-  .src-load{background:var(--bot-bg);color:#2c517f;}           .src-load .dot{background:var(--almost);animation:pulse 1s infinite;}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-  .src-time{font-size:12px;color:var(--ink-faint);}
-  .src-actions{margin-left:auto;display:flex;gap:8px;}
-  .src-btn{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);border-radius:8px;padding:6px 12px;font-size:12.5px;cursor:pointer;font-family:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:.14s;}
-  .src-btn:hover{border-color:#b9c0cb;color:var(--ink);}
-  .add-btn{background:var(--ink);color:#fff;border-color:var(--ink);}
-  .add-btn:hover{color:#fff;opacity:.9;}
-
-  .seg-tabs{display:flex;gap:8px;margin:18px 0 16px;flex-wrap:wrap;}
-  .seg-tab{appearance:none;border:1px solid var(--line-strong);background:var(--surface);border-radius:11px;padding:11px 18px;cursor:pointer;text-align:left;transition:.16s;min-width:150px;font-family:inherit;}
-  .seg-tab:hover{border-color:#b9c0cb;transform:translateY(-1px);}
-  .seg-tab.active{border-color:var(--ink);background:var(--ink);color:#fff;}
-  .seg-tab .st-name{font-weight:700;font-size:15px;display:block;}
-  .seg-tab .st-desc{font-size:12px;color:var(--ink-faint);}
-  .seg-tab.active .st-desc{color:rgba(255,255,255,.7);}
-
-  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px;}
-  .legend{display:flex;gap:18px;flex-wrap:wrap;align-items:center;}
-  .legend-group{display:flex;gap:13px;flex-wrap:wrap;align-items:center;}
-  .lg-title{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-faint);font-family:'Spline Sans Mono',monospace;margin-right:2px;}
-  .lg-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-soft);}
-  .swatch{width:13px;height:13px;border-radius:4px;flex:none;}
-  .dot{width:9px;height:9px;border-radius:50%;flex:none;}
-  .filters{display:flex;gap:7px;align-items:center;}
-  .filter-btn{border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-soft);border-radius:8px;padding:6px 11px;font-size:12.5px;cursor:pointer;font-family:inherit;transition:.14s;}
-  .filter-btn:hover{border-color:#b9c0cb;}
-  .filter-btn.on{background:var(--ink);color:#fff;border-color:var(--ink);}
-
-  .board{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
-  .col{display:flex;flex-direction:column;min-width:0;}
-  .col + .col{border-left:1px dashed var(--line);padding-left:14px;margin-left:-1px;}
-  .col-head{margin-bottom:12px;}
-  .col-step{font-family:'Spline Sans Mono',monospace;font-size:11px;color:var(--ink-faint);letter-spacing:.05em;margin-bottom:3px;}
-  .col-title{font-weight:700;font-size:14.5px;letter-spacing:-.01em;}
-  .col-cards{display:flex;flex-direction:column;gap:10px;flex:1;}
-
-  .card{border:1px solid var(--line-strong);border-radius:11px;padding:11px 12px 10px;cursor:pointer;position:relative;transition:.15s;background:var(--surface);overflow:hidden;}
-  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;}
-  .card[data-type="ml"]{background:var(--ml-bg);}   .card[data-type="ml"]::before{background:var(--ml-deep);}
-  .card[data-type="bot"]{background:var(--bot-bg);} .card[data-type="bot"]::before{background:var(--bot-deep);}
-  .card[data-type="kc"]{background:var(--kc-bg);}   .card[data-type="kc"]::before{background:var(--kc-deep);}
-  .card[data-type="crm"]{background:var(--crm-bg);} .card[data-type="crm"]::before{background:var(--crm-deep);}
-  .card[data-status="planned"]{border-style:dashed;border-color:var(--line-strong);background:repeating-linear-gradient(135deg,#fafbfc,#fafbfc 7px,#f3f5f7 7px,#f3f5f7 14px);}
-  .card[data-status="planned"]::before{opacity:.45;}
-  .card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:#b9c0cb;}
-  .card.dim{opacity:.28;filter:saturate(.4);pointer-events:none;}
-  .card-top{display:flex;align-items:center;gap:6px;margin-bottom:5px;padding-left:8px;}
-  .type-tag{font-family:'Spline Sans Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;padding:2px 6px;border-radius:5px;color:#fff;}
-  .type-tag.ml{background:var(--ml-deep);} .type-tag.bot{background:var(--bot-deep);}
-  .type-tag.kc{background:var(--kc-deep);} .type-tag.crm{background:var(--crm-deep);}
-  .status-dot{margin-left:auto;}
-  .card-name{font-weight:700;font-size:13.5px;line-height:1.25;padding-left:8px;letter-spacing:-.01em;}
-  .card-status-txt{font-size:11.5px;color:var(--ink-soft);padding-left:8px;margin-top:4px;display:flex;align-items:center;gap:5px;}
-  .add-col{border:1.5px dashed var(--line-strong);border-radius:11px;padding:10px;text-align:center;color:var(--ink-faint);font-size:12.5px;cursor:pointer;background:transparent;transition:.14s;}
-  .add-col:hover{border-color:var(--ink);color:var(--ink);}
-
-  .summary{margin-top:22px;display:grid;grid-template-columns:1.3fr 1fr;gap:14px;}
-  .panel-box{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow);}
-  .panel-box h3{margin:0 0 12px;font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;}
-  .takeaway{font-size:13.5px;color:var(--ink-soft);margin:0 0 9px;padding-left:18px;position:relative;line-height:1.5;}
-  .takeaway::before{content:"";position:absolute;left:2px;top:8px;width:6px;height:6px;border-radius:50%;background:var(--ink);}
-  .stat-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
-  .stat{flex:1;min-width:110px;border:1px solid var(--line);border-radius:10px;padding:11px 13px;}
-  .stat .num{font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1;}
-  .stat .lbl{font-size:11.5px;color:var(--ink-soft);margin-top:5px;}
-
-  .scrim{position:fixed;inset:0;background:rgba(16,22,33,.32);opacity:0;pointer-events:none;transition:.22s;z-index:40;}
-  .scrim.open{opacity:1;pointer-events:auto;}
-  .drawer{position:fixed;top:0;right:0;height:100%;width:440px;max-width:94vw;background:var(--surface);box-shadow:var(--shadow-lg);z-index:50;transform:translateX(102%);transition:transform .26s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
-  .drawer.open{transform:translateX(0);}
-  .drawer-head{padding:22px 24px 16px;border-bottom:1px solid var(--line);position:relative;}
-  .drawer-close{position:absolute;top:18px;right:18px;border:none;background:var(--bg);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;color:var(--ink-soft);line-height:1;transition:.14s;}
-  .drawer-close:hover{background:var(--line);}
-  .drawer-tags{display:flex;gap:7px;align-items:center;margin-bottom:11px;flex-wrap:wrap;}
-  .drawer h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-.02em;line-height:1.2;padding-right:30px;}
-  .drawer-body{padding:20px 24px;overflow-y:auto;flex:1;}
-  .field{margin-bottom:18px;}
-  .field-label{font-family:'Spline Sans Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;}
-  .field-val{font-size:14px;color:var(--ink);line-height:1.55;}
-  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:20px;background:var(--bg);color:var(--ink-soft);}
-  .need-box{background:#fff8ea;border:1px solid #f3e3bd;border-radius:10px;padding:12px 14px;font-size:13.5px;color:#7a5a14;line-height:1.5;}
-  .need-box.done{background:var(--crm-bg);border-color:#bfe6c4;color:#2e6b3f;}
-  table.cooldown{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:4px;}
-  table.cooldown th,table.cooldown td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);}
-  table.cooldown th{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);font-family:'Spline Sans Mono',monospace;font-weight:600;}
-  .hint{font-size:12px;color:var(--ink-faint);margin-top:14px;font-style:italic;}
-
-  /* form */
-  .frm label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:13px;font-weight:600;}
-  .frm label .f-hint{font-weight:400;color:var(--ink-faint);font-size:11px;}
-  .frm input[type=text],.frm input:not([type]),.frm input[type=number],.frm textarea,.frm select{width:100%;margin-top:5px;border:1px solid var(--line-strong);border-radius:9px;padding:9px 11px;font-family:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);resize:vertical;}
-  .frm textarea{line-height:1.45;}
-  .frm select{cursor:pointer;}
-  .f-row{display:flex;gap:10px;}
-  .f-row label{flex:1;}
-  .f-check{display:flex;align-items:center;gap:8px;font-weight:600;}
-  .f-check input{width:auto;margin-top:0;}
-  .f-actions{display:flex;gap:8px;margin-top:8px;align-items:center;}
-  .btn-primary{background:var(--ink);color:#fff;border:none;border-radius:9px;padding:10px 18px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit;}
-  .btn-primary:disabled{opacity:.5;cursor:default;}
-  .btn-ghost{background:var(--surface);color:var(--ink-soft);border:1px solid var(--line-strong);border-radius:9px;padding:10px 16px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit;}
-  .btn-danger{background:#fff;color:#c0392b;border:1px solid #f0c4bd;border-radius:9px;padding:10px 16px;font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit;margin-left:auto;}
-
-  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 20px;border-radius:10px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:var(--shadow-lg);max-width:90vw;}
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-
-  @media(max-width:880px){
-    .board{grid-template-columns:1fr;gap:0;}
-    .col+.col{border-left:none;border-top:1px dashed var(--line);padding-left:0;margin-left:0;padding-top:16px;margin-top:16px;}
-    .summary{grid-template-columns:1fr;}
-    .src-actions{margin-left:0;width:100%;flex-wrap:wrap;}
-  }
+:root{--bg:#f4f5f7;--card:#fff;--ink:#151820;--soft:#626a77;--line:#e1e5eb;--green:#269354;--amber:#d89e21;--blue:#3f72b8;--gray:#99a1ad}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 Onest,system-ui,sans-serif}
+.wrap{max-width:1380px;margin:auto;padding:30px 24px 70px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#929aa6}
+h1{font-size:30px;line-height:1.15;margin:7px 0 8px}.intro{max-width:900px;color:var(--soft)}
+.hero{margin:18px 0;display:grid;grid-template-columns:1.4fr 1fr;gap:12px}.hero>div,.metric,.board{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 18px #18202c0b}
+.hero>div{padding:17px 19px}.label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:#939ba7;margin-bottom:5px}.hero b{font-size:15px}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}.metric{padding:13px 15px}.metric .value{font-size:24px;font-weight:800}.metric .caption{font-size:11px;color:var(--soft)}
+.tabs,.filters{display:flex;gap:8px;flex-wrap:wrap}.tabs{margin:16px 0}.tab,.filter{border:1px solid #cfd5dd;background:#fff;border-radius:10px;padding:9px 14px;font:600 13px Onest;cursor:pointer}.tab.on,.filter.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.toolbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}.source{font-size:12px;color:var(--soft)}
+.board{padding:15px;display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.col{min-width:0}.col+.col{border-left:1px dashed var(--line);padding-left:13px}
+.step{font-size:10px;color:#9aa1ac}.stage{font-size:15px;font-weight:700;margin:3px 0 11px}.cards{display:grid;gap:10px}
+.card{border:1px solid #d7dce3;border-radius:12px;padding:12px;background:#fff}.card[data-type=ml]{background:#fdf1e8}.card[data-type=bot]{background:#eef4fd}.card[data-type=kc]{background:#fceef5}.card[data-type=crm]{background:#edf8ef}
+.top{display:flex;align-items:center;gap:7px}.tag{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#4f5967;border-radius:5px;padding:2px 6px}.dot{width:8px;height:8px;border-radius:50%;margin-left:auto}.name{font-size:14px;font-weight:800;line-height:1.25;margin:8px 0}
+.status{font-size:11px;color:var(--soft)}.facts{border-top:1px solid #18202c12;margin-top:9px;padding-top:8px;display:grid;gap:7px}.fact{font-size:12px;color:var(--soft)}.fact strong{color:var(--ink)}
+.reach{margin-top:9px;display:inline-flex;background:#ffffffb8;border:1px solid #18202c10;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:700}
+.empty{color:#9aa1ac;font-size:12px;border:1px dashed #ccd2da;border-radius:10px;padding:12px}.note{margin-top:16px;color:#858d99;font-size:12px}
+@media(max-width:900px){.hero,.board{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.col+.col{border-left:0;border-top:1px dashed var(--line);padding:14px 0 0}.toolbar{align-items:flex-start;flex-direction:column}}
 </style>
 </head>
-<body>
-<div class="wrap">
-  <header class="top">
-    <div class="eyebrow">Real Estate · CRM-маркетинг</div>
-    <h1>Карта ML-моделей и колл-ботов по сегментам</h1>
-    <div class="sub">Google-таблица — это база. Добавляй, редактируй и удаляй карточки прямо здесь: изменения сразу пишутся в таблицу. Кликни по карточке — пояснение и кнопка редактирования.</div>
-  </header>
-
-  <div class="source-bar">
-    <span class="src-badge src-seed" id="srcBadge"><span class="dot"></span><span id="srcText">Встроенные данные</span></span>
-    <span class="src-time" id="srcTime"></span>
-    <div class="src-actions">
-      <button class="src-btn add-btn" id="addBtn" style="display:none">＋ Добавить</button>
-      <a class="src-btn" id="editLink" target="_blank" rel="noopener">⤓ Открыть таблицу</a>
-      <button class="src-btn" id="refreshBtn">↻ Обновить</button>
-    </div>
-  </div>
-
-  <div class="seg-tabs" id="segTabs"></div>
-
+<body><main class="wrap">
+  <div class="eyebrow">Real Estate · CRM-маркетинг</div>
+  <h1>Карта ML-моделей и коммуникаций</h1>
+  <div class="intro">Портфель решений по сегментам и этапам клиентского пути: от определения потребности до продления и удержания.</div>
+  <section class="hero">
+    <div><div class="label">Статус</div><b>Часть решений уже работает, часть проходит тестирование или находится в плане.</b></div>
+    <div><div class="label">Амбиция</div><b>Персональное автоматизированное касание для каждого пользователя на всём клиентском пути.</b></div>
+  </section>
+  <section class="metrics" id="metrics"></section>
+  <nav class="tabs" id="tabs"></nav>
   <div class="toolbar">
-    <div class="legend">
-      <div class="legend-group">
-        <span class="lg-title">Тип</span>
-        <span class="lg-item"><span class="swatch" style="background:var(--ml-deep)"></span>ML-модель</span>
-        <span class="lg-item"><span class="swatch" style="background:var(--bot-deep)"></span>Колл-бот</span>
-        <span class="lg-item"><span class="swatch" style="background:var(--kc-deep)"></span>КЦ</span>
-        <span class="lg-item"><span class="swatch" style="background:var(--crm-deep)"></span>CRM / промо</span>
-      </div>
-      <div class="legend-group">
-        <span class="lg-title">Статус</span>
-        <span class="lg-item"><span class="dot" style="background:var(--live)"></span>Готово</span>
-        <span class="lg-item"><span class="dot" style="background:var(--inwork)"></span>В работе</span>
-        <span class="lg-item"><span class="dot" style="background:var(--almost)"></span>Почти готов</span>
-        <span class="lg-item"><span class="dot" style="background:var(--planned)"></span>Планируется</span>
-      </div>
-    </div>
-    <div class="filters" id="filters">
-      <button class="filter-btn on" data-f="all">Все</button>
-      <button class="filter-btn" data-f="gap">Что внедрить</button>
-    </div>
+    <div class="filters"><button class="filter on" data-filter="all">Все</button><button class="filter" data-filter="gap">Что внедрить</button></div>
+    <div class="source" id="source">Загружаю актуальные данные…</div>
   </div>
-
-  <div class="board" id="board"></div>
-
-  <div class="summary">
-    <div class="panel-box"><h3>Выводы по сегменту</h3><div id="takeaways"></div></div>
-    <div class="panel-box"><h3>Срез готовности</h3><div class="stat-row" id="stats"></div></div>
-  </div>
-</div>
-
-<div class="scrim" id="scrim"></div>
-<aside class="drawer" id="drawer">
-  <div class="drawer-head">
-    <button class="drawer-close" id="drawerClose">✕</button>
-    <div class="drawer-tags" id="dTags"></div>
-    <h2 id="dName"></h2>
-  </div>
-  <div class="drawer-body" id="dBody"></div>
-</aside>
-<div id="toast"></div>
-
+  <section class="board" id="board"></section>
+  <div class="note">Охват считается корректно только после заполнения поля reach в базе. Значения разных механик нельзя складывать без дедупликации пользователей.</div>
+</main>
 <script>
-/* ============================================================
-   НАСТРОЙКА (после деплоя Apps Script — см. apps-script.gs)
-   1) SCRIPT_URL  — URL веб-приложения, заканчивается на /exec
-   2) API_TOKEN   — тот же TOKEN, что в скрипте
-   Пока SCRIPT_URL пустой — режим только чтения (встроенные данные).
-============================================================ */
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxp4Yicws0Es3QvYoqbpUXppw6-cnU9U6omD65PX9kE7es-nxGhzOUiide6dGl8OYAoAg/exec";
-const API_TOKEN  = "CHANGE_ME_secret";  // ← тот же, что в Apps Script
-const SHEET_EDIT_URL = "https://docs.google.com/spreadsheets/d/1zcgSjI5zD7TguYItZIAWjvYZD5QzVyacsnWZojfq0F8/edit?gid=2064400045#gid=2064400045";
-
-/* ---------- метаданные сегментов ---------- */
-const SEG_META = {
-  ml: {name:'M / L', desc:'Средний и крупный', takeaways:[
-    'Объектов больше, чем у XS/S → нужны базовые функции автоматизации работы.',
-    'Работают через CRM, но часто не знают всего функционала → ценность в «настройке под ключ».',
-    'Фокус моделей — удержание и рост LTV (отток + аплифт тарифа), а не первичная конверсия в продвижение.',
-  ]},
-  sxs: {name:'S / XS', desc:'Малый сегмент', takeaways:[
-    'Маленькие обороты, мало объектов → не готовы платить за высокие тарифы.',
-    'Важны базовые функции: прозвон лидов, публикация и продвижение объявлений.',
-    'Чаще работают с телефона, нет персонального менеджера → критична автоматизация касаний (боты).',
-  ]},
-  private: {name:'Private', desc:'Частные лица · целевой формат', takeaways:[
-    'Целевой формат: связка «портрет → канал (КЦ / колл-бот / CRM) → действие» по этапам.',
-    'Ядро — ML склонности к покупке BBiP по каналам КЦ и CRM, плюс детект склонности к размещению на входе.',
-    'Логика касаний завязана на статусы и кулдауны — переиспользуемый шаблон для M/L и S/XS.',
-  ]},
-};
-
-/* ---------- встроенные данные (только чтение, если БД не подключена) ---------- */
-const SEED_ROWS = [
-  {segment:'ml',stage:'active',type:'ml',status:'inwork',name:'Детект отточников',what:'Предсказывает риск ухода агента/АН с площадки. Скор обновляется в период размещения и позволяет выйти на проблемного клиента до того, как он перестанет продлевать.',trigger:'Период размещения, с прицелом на проактивное удержание перед завершением объявлений.',need:'Модель готова. Нужны витрина и аналитика, чтобы запустить сценарий удержания (КЦ/CRM) и мерить эффект.',need_done:'FALSE',details:'',order:'1'},
-  {segment:'ml',stage:'active',type:'ml',status:'inwork',name:'Склонность к аплифту тарифа',what:'Оценивает готовность перейти на более высокий тариф. Позволяет таргетированно предлагать апгрейд тем, кто к нему близок, без давления на остальных.',trigger:'Период размещения — когда клиент уже активно работает и упирается в лимиты текущего тарифа.',need:'Модель готова. Нужны витрина и аналитика для запуска предложения и оценки конверсии в апгрейд.',need_done:'FALSE',details:'',order:'2'},
-  {segment:'ml',stage:'active',type:'ml',status:'planned',name:'Склонность к покупке продвижения (BBiP)',what:'Гипотеза: для M/L пока нет отдельной модели склонности к покупке услуг продвижения, хотя для S/XS она уже готова. Стоит проверить перенос.',trigger:'Период размещения — допродажа продвижения активным объявлениям.',need:'Не начато. Кандидат на перенос модели из S/XS с переобучением на данных M/L.',need_done:'FALSE',details:'',order:'3'},
-  {segment:'ml',stage:'complete',type:'bot',status:'almost',name:'Колл-бот: пролонгация / напоминание',what:'Автоматически напоминает о продлении размещения и снимает рутинную нагрузку с КЦ на массовых, предсказуемых касаниях.',trigger:'Завершение объявления / момент перед продлением.',need:'Почти готов. Нужны аналитика и А/Б-тест, чтобы подтвердить эффект на продления и не пересекаться с КЦ.',need_done:'FALSE',details:'',order:'1'},
-  {segment:'sxs',stage:'active',type:'ml',status:'live',name:'Склонность к покупке продвижения (BBiP)',what:'Предсказывает готовность купить услуги продвижения. Позволяет точечно предлагать BBiP тем, у кого высокая вероятность покупки, через КЦ/CRM/бота.',trigger:'Период размещения — допродажа продвижения к уже опубликованному объявлению.',need:'Модель готова и работает. Дальше — масштабирование на каналы и оптимизация скидки.',need_done:'TRUE',details:'',order:'1'},
-  {segment:'sxs',stage:'active',type:'ml',status:'live',name:'Склонность к аплифту тарифа',what:'Оценивает готовность перейти на более высокий тариф. Для S/XS сегмента модель уже готова.',trigger:'Период размещения — предложение апгрейда активным пользователям.',need:'Модель готова. Следующий шаг — увязать с витриной и сценарием касания.',need_done:'TRUE',details:'',order:'2'},
-  {segment:'sxs',stage:'active',type:'ml',status:'inwork',name:'Детект отточников',what:'Предсказывает риск ухода с площадки. В малом сегменте отток выше и быстрее, поэтому раннее предупреждение особенно ценно.',trigger:'Период размещения, с прицелом на удержание перед завершением.',need:'Модель готова. Нужны витрина и аналитика для запуска сценария удержания.',need_done:'FALSE',details:'',order:'3'},
-  {segment:'sxs',stage:'active',type:'bot',status:'planned',name:'+ Доп. колл-боты (заполнить)',what:'Заглушка под остальные колл-боты сегмента S/XS — дополнить. Например: бот по реактивации, бот по допродаже BBiP на оттоке звонков, бот по возврату на оттоке подачи.',trigger:'Уточняется.',need:'Список дополняется. Для каждого бота укажем: триггер, канал, статус, что нужно для запуска.',need_done:'FALSE',details:'',order:'4'},
-  {segment:'sxs',stage:'complete',type:'bot',status:'almost',name:'Колл-бот: пролонгация / напоминание',what:'Автоматическое напоминание о продлении. Для S/XS, у которых нет персонального менеджера, бот закрывает массовый поток касаний.',trigger:'Завершение объявления / момент перед продлением.',need:'Почти готов. Нужны аналитика и А/Б-тест.',need_done:'FALSE',details:'',order:'1'},
-  {segment:'private',stage:'pre',type:'ml',status:'live',name:'ML склонности к размещению',what:'Отбирает пользователей Private с высокой вероятностью разместить объявление о продаже недвижимости — основа для промо на входе.',trigger:'До размещения — формирует базу для стимулирующего промо.',need:'Работает. Питает промо-сценарий размещения.',need_done:'TRUE',details:'',order:'1'},
-  {segment:'private',stage:'pre',type:'crm',status:'planned',name:'Промо для стимуляции размещения',what:'Скидка на размещение + продвижение для пользователей с высоким скором ML склонности к размещению.',trigger:'До размещения.',need:'Часть на платном листинге, часть продвижения — запуск в Q2.',need_done:'FALSE',details:'',order:'2'},
-  {segment:'private',stage:'submit',type:'crm',status:'live',name:'Промо для возврата на оттоке подачи',what:'Скидка/стимул для тех, кто начал размещать, но отвалился на этапе подачи (отток на подаче).',trigger:'Этап подачи — срабатывает при оттоке до успешной публикации.',need:'Активная кампания.',need_done:'TRUE',details:'',order:'1'},
-  {segment:'private',stage:'active',type:'kc',status:'live',name:'КЦ 1-го числа (Виртуальный менеджер RE, тест)',what:'Прозвон базы Private силами КЦ 1-го числа каждого месяца. Закрепление за виртуальным менеджером RE private — тестовая группа.',trigger:'Период размещения, ежемесячно.',need:'Тест идёт. Питается витриной АвтоКП и ML склонности к покупке BBiP.',need_done:'TRUE',details:'',order:'1'},
-  {segment:'private',stage:'active',type:'bot',status:'live',name:'Call-robot 1-го числа (контроль)',what:'Аналог прозвона КЦ, но колл-ботом — контрольная группа виртуального менеджера RE private. Сравнивается с КЦ по эффективности касания.',trigger:'Период размещения, ежемесячно.',need:'Тест идёт против группы КЦ.',need_done:'TRUE',details:'',order:'2'},
-  {segment:'private',stage:'active',type:'ml',status:'live',name:'ML склонности к покупке BBiP (канал КЦ)',what:'Скор склонности к покупке продвижения для прозвона через КЦ. Топ-сегмент (скор 70%+) идёт в приоритетный прозвон.',trigger:'Период размещения — отбор для прозвона КЦ.',need:'Работает, питает прозвон КЦ.',need_done:'TRUE',details:'',order:'3'},
-  {segment:'private',stage:'active',type:'ml',status:'planned',name:'Uplift ML склонности к покупке BBiP (канал CRM)',what:'Для тех, кому не было звонка бота/КЦ более 30 дней: CRM-предложение купить BBiP пользователям с высоким скором.',trigger:'Период размещения, после паузы в касаниях более 30 дней.',need:'В тесте (uplift-замер). Нужен полноценный А/Б по каналу CRM.',need_done:'FALSE',details:'',order:'4'},
-  {segment:'private',stage:'active',type:'kc',status:'live',name:'Логика статусов и кулдаунов прозвона',what:'Правила, по которым касание уходит в паузу в зависимости от исхода прозвона — чтобы не пережигать базу. Переиспользуемый шаблон для всех сегментов.',trigger:'Период размещения — после каждого прозвона КЦ/бота.',need:'Работает.',need_done:'TRUE',details:'Оплачено с покупкой::Кулдаун 60 дней;;Оплачено без покупки::Кулдаун 60 дней;;Отказы::КП не формируем 60 дней;;Взято в работу::КП через 3 дня;;НДЗ (недозвон)::Повтор через 5 дней',order:'5'},
-  {segment:'private',stage:'complete',type:'crm',status:'planned',name:'Промо «отток после завершения»',what:'Объявление завершилось органически (без уведомления о продлении) — скидка на размещение и продвижение для возврата.',trigger:'Завершение объявления.',need:'Планируется (платный + бесплатный листинг, продвижение).',need_done:'FALSE',details:'',order:'1'},
-];
-
-const STAGES=[{id:'pre',step:'01',title:'До размещения'},{id:'submit',step:'02',title:'Этап подачи'},{id:'active',step:'03',title:'Период размещения'},{id:'complete',step:'04',title:'Завершение / продление'}];
-const STATUS={live:{label:'Готово',color:'var(--live)'},inwork:{label:'В работе',color:'var(--inwork)'},almost:{label:'Почти готов',color:'var(--almost)'},planned:{label:'Планируется',color:'var(--planned)'}};
-const TYPE={ml:{label:'ML',cls:'ml'},bot:{label:'Колл-бот',cls:'bot'},kc:{label:'КЦ',cls:'kc'},crm:{label:'CRM',cls:'crm'}};
-const SEG_IDS=['ml','sxs','private'], STAGE_IDS=['pre','submit','active','complete'], TYPE_IDS=['ml','bot','kc','crm'], STATUS_IDS=['live','inwork','almost','planned'];
-
-let rows = SEED_ROWS.slice();
-let activeSeg='ml', filterMode='all', connected=false, busy=false;
-const $=s=>document.querySelector(s);
-const val=id=>document.getElementById(id).value;
-const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-const isTrue=v=>['true','1','да','yes','y','истина','✓'].includes(String(v==null?'':v).trim().toLowerCase());
-function parseDetails(s){if(!s||!String(s).trim())return null;return String(s).split(';;').map(p=>{const x=p.split('::');return [(x[0]||'').trim(),(x[1]||'').trim()];}).filter(p=>p[0]);}
-function normalize(r){const o={};Object.keys(r).forEach(k=>o[k]=r[k]==null?'':String(r[k]));return o;}
-function metaOf(id){return SEG_META[id]||{name:id,desc:'',takeaways:[]};}
-function statusDot(st){const c=(STATUS[st]||{}).color||'var(--planned)';return '<span class="dot" style="background:'+c+'"></span>';}
-function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2800);}
-
-/* ---------- API (Apps Script) ---------- */
-async function apiRead(){
-  const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'read',token:API_TOKEN})});
-  const data=await res.json(); if(!data.ok)throw new Error(data.error||'ошибка'); return data.rows.map(normalize);
-}
-async function apiWrite(action,payload){
-  const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,token:API_TOKEN},payload))});
-  const data=await res.json(); if(!data.ok)throw new Error(data.error||'ошибка'); return data.rows.map(normalize);
-}
-async function load(manual){
-  if(!SCRIPT_URL){connected=false;setBadge('seed');render();return;}
-  setBadge('load');
-  try{rows=await apiRead();connected=true;setBadge('sheet');render();if(manual)toast('Обновлено');}
-  catch(err){connected=false;setBadge('err',err.message);render();}
-}
-function setBadge(mode,msg){
-  const b=$('#srcBadge'),t=$('#srcText'),tm=$('#srcTime');
-  b.className='src-badge '+({seed:'src-seed',sheet:'src-sheet',err:'src-err',load:'src-load'}[mode]);
-  const now=new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
-  if(mode==='seed'){t.textContent='Только чтение — БД не подключена';tm.textContent='подключи Apps Script (SCRIPT_URL) для редактирования';}
-  if(mode==='load'){t.textContent='Подключаюсь к базе…';tm.textContent='';}
-  if(mode==='sheet'){t.textContent='База подключена · чтение и запись';tm.textContent='обновлено '+now;}
-  if(mode==='err'){t.textContent='Нет связи с базой — встроенные данные';tm.textContent=msg||'';}
-  $('#addBtn').style.display=connected?'inline-flex':'none';
-}
-
-/* ---------- render ---------- */
-function segmentsPresent(){
-  const ids=[...new Set(rows.map(r=>r.segment))];
-  const ordered=SEG_IDS.filter(x=>ids.includes(x)); ids.forEach(x=>{if(!ordered.includes(x))ordered.push(x);});
-  if(!ordered.length)ordered.push('ml');
-  if(!ordered.includes(activeSeg))activeSeg=ordered[0];
-  return ordered;
-}
-function buildTabs(){
-  const t=$('#segTabs');t.innerHTML='';
-  segmentsPresent().forEach(id=>{
-    const m=metaOf(id),b=document.createElement('button');
-    b.className='seg-tab'+(id===activeSeg?' active':'');
-    b.innerHTML='<span class="st-name">'+esc(m.name)+'</span><span class="st-desc">'+esc(m.desc)+'</span>';
-    b.onclick=()=>{activeSeg=id;render();};
-    t.appendChild(b);
-  });
-}
+const API='https://script.google.com/macros/s/AKfycbxp4Yicws0Es3QvYoqbpUXppw6-cnU9U6omD65PX9kE7es-nxGhzOUiide6dGl8OYAoAg/exec';
+const TOKEN='CHANGE_ME_secret';
+const META={ml:{name:'M / L',desc:'Средний и крупный'},sxs:{name:'S / XS',desc:'Малый сегмент'},private:{name:'Private',desc:'Частные лица'}};
+const STAGES=[['pre','01','До размещения'],['submit','02','Этап подачи'],['active','03','Период размещения'],['complete','04','Завершение / продление']];
+const TYPES={ml:'ML',bot:'Колл-бот',kc:'КЦ',crm:'CRM / промо'};
+const STATUS={live:['Готово','#269354'],inwork:['В работе','#d89e21'],almost:['Почти готов','#3f72b8'],planned:['Планируется','#99a1ad']};
+let rows=[],segment='ml',filter='all';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const brief=(s,n=118)=>{s=String(s||'Уточняется');return s.length>n?s.slice(0,n-1)+'…':s};
 function render(){
-  buildTabs();
-  const segRows=rows.filter(r=>r.segment===activeSeg);
-  const board=$('#board');board.innerHTML='';
-  STAGES.forEach(stage=>{
-    const col=document.createElement('div');col.className='col';
-    col.innerHTML='<div class="col-head"><div class="col-step">'+stage.step+'</div><div class="col-title">'+stage.title+'</div></div>';
-    const cards=document.createElement('div');cards.className='col-cards';
-    segRows.filter(r=>r.stage===stage.id)
-      .sort((a,b)=>(parseFloat(a.order||99)-parseFloat(b.order||99))||a.name.localeCompare(b.name))
-      .forEach(m=>{
-        const isGap=m.status!=='live', dim=(filterMode==='gap'&&!isGap);
-        const tp=TYPE[m.type]?m.type:'ml', stt=STATUS[m.status]?m.status:'planned';
-        const card=document.createElement('div');
-        card.className='card'+(dim?' dim':'');card.dataset.type=tp;card.dataset.status=stt;
-        card.innerHTML='<div class="card-top"><span class="type-tag '+TYPE[tp].cls+'">'+TYPE[tp].label+'</span><span class="status-dot">'+statusDot(stt)+'</span></div>'+
-          '<div class="card-name">'+esc(m.name)+'</div>'+
-          '<div class="card-status-txt">'+statusDot(stt)+' '+STATUS[stt].label+'</div>';
-        card.onclick=()=>openView(m);
-        cards.appendChild(card);
-      });
-    if(connected){
-      const add=document.createElement('div');add.className='add-col';add.textContent='＋ карточка';
-      add.onclick=()=>openEdit(null,{stage:stage.id});cards.appendChild(add);
-    }
-    col.appendChild(cards);board.appendChild(col);
-  });
-  const m=metaOf(activeSeg);
-  $('#takeaways').innerHTML=(m.takeaways||[]).map(t=>'<p class="takeaway">'+esc(t)+'</p>').join('')||'<p class="takeaway">—</p>';
-  const c={live:0,inwork:0,almost:0,planned:0};segRows.forEach(r=>{if(c[r.status]!=null)c[r.status]++;});
-  $('#stats').innerHTML=
-    '<div class="stat"><div class="num" style="color:var(--live)">'+c.live+'</div><div class="lbl">Готово / в проде</div></div>'+
-    '<div class="stat"><div class="num" style="color:var(--inwork)">'+c.inwork+'</div><div class="lbl">В работе</div></div>'+
-    '<div class="stat"><div class="num" style="color:var(--almost)">'+c.almost+'</div><div class="lbl">Почти готов</div></div>'+
-    '<div class="stat"><div class="num" style="color:var(--planned)">'+c.planned+'</div><div class="lbl">Планируется</div></div>';
+  const present=[...new Set(rows.map(x=>x.segment))]; if(!present.includes(segment))segment=present[0]||'ml';
+  tabs.innerHTML=present.map(id=>'<button class="tab '+(id===segment?'on':'')+'" data-seg="'+esc(id)+'">'+esc(META[id]?.name||id)+' · '+esc(META[id]?.desc||'')+'</button>').join('');
+  const sr=rows.filter(x=>x.segment===segment), shown=filter==='gap'?sr.filter(x=>x.status!=='live'):sr;
+  const counts={live:0,inwork:0,almost:0,planned:0};sr.forEach(x=>{if(x.status in counts)counts[x.status]++});
+  const reachFilled=sr.filter(x=>String(x.reach||'').trim()).length;
+  metrics.innerHTML=
+   '<div class="metric"><div class="value">'+sr.length+'</div><div class="caption">механик в сегменте</div></div>'+
+   '<div class="metric"><div class="value" style="color:var(--green)">'+counts.live+'</div><div class="caption">готово / работает</div></div>'+
+   '<div class="metric"><div class="value">'+(counts.inwork+counts.almost)+'</div><div class="caption">в работе / почти готово</div></div>'+
+   '<div class="metric"><div class="value">'+(reachFilled?reachFilled+' / '+sr.length:'—')+'</div><div class="caption">карточек с заполненным охватом</div></div>';
+  board.innerHTML=STAGES.map(([id,num,title])=>{
+    const list=shown.filter(x=>x.stage===id).sort((a,b)=>(+a.order||99)-(+b.order||99));
+    const cards=list.length?list.map(card).join(''):'<div class="empty">Нет механик</div>';
+    return '<div class="col"><div class="step">'+num+'</div><div class="stage">'+title+'</div><div class="cards">'+cards+'</div></div>';
+  }).join('');
 }
-
-/* ---------- drawer: view ---------- */
-function openView(m){
-  const tp=TYPE[m.type]?m.type:'ml', stt=STATUS[m.status]?m.status:'planned';
-  $('#dName').textContent=m.name;
-  $('#dTags').innerHTML='<span class="type-tag '+TYPE[tp].cls+'">'+TYPE[tp].label+'</span><span class="pill">'+statusDot(stt)+' '+STATUS[stt].label+'</span>';
-  const stage=(STAGES.find(s=>s.id===m.stage)||{title:m.stage}).title;
-  let html=
-    '<div class="field"><div class="field-label">Этап клиентского пути</div><div class="field-val">'+esc(stage)+'</div></div>'+
-    '<div class="field"><div class="field-label">Что делает</div><div class="field-val">'+esc(m.what||'—')+'</div></div>'+
-    '<div class="field"><div class="field-label">Когда срабатывает</div><div class="field-val">'+esc(m.trigger||'—')+'</div></div>'+
-    '<div class="field"><div class="field-label">Статус / что нужно</div><div class="need-box'+(isTrue(m.need_done)?' done':'')+'">'+esc(m.need||'—')+'</div></div>';
-  const det=parseDetails(m.details);
-  if(det)html+='<div class="field"><div class="field-label">Детали / правила</div><table class="cooldown"><tr><th>Параметр</th><th>Значение</th></tr>'+det.map(r=>'<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td></tr>').join('')+'</table></div>';
-  if(connected)html+='<div class="f-actions"><button class="btn-primary" id="editBtn">Редактировать</button></div>';
-  else html+='<div class="hint">Подключи Apps Script (SCRIPT_URL), чтобы редактировать прямо здесь.</div>';
-  $('#dBody').innerHTML=html;
-  if(connected)$('#editBtn').onclick=()=>openEdit(m);
-  openDrawer();
+function card(m){
+  const st=STATUS[m.status]||STATUS.planned;
+  const expectation=m.expectation||m.what||'Уточняется';
+  const result=m.result||m.need||'Уточняется';
+  const reach=m.reach||'Охват уточняется';
+  return '<article class="card" data-type="'+esc(m.type)+'"><div class="top"><span class="tag">'+esc(TYPES[m.type]||m.type)+'</span><span class="dot" style="background:'+st[1]+'"></span></div>'+
+   '<div class="name">'+esc(m.name)+'</div><div class="status">'+esc(st[0])+'</div>'+
+   '<div class="facts"><div class="fact"><strong>Ожидание:</strong> '+esc(brief(expectation))+'</div><div class="fact"><strong>Результат:</strong> '+esc(brief(result))+'</div></div>'+
+   '<div class="reach">◉ '+esc(reach)+'</div></article>';
 }
-
-/* ---------- drawer: edit / create ---------- */
-function opts(ids,label,sel){return ids.map(id=>'<option value="'+id+'"'+(id===sel?' selected':'')+'>'+esc(label(id))+'</option>').join('');}
-function openEdit(m,defaults){
-  const isNew=!m;
-  const d=Object.assign({segment:activeSeg,stage:'active',type:'ml',status:'inwork',name:'',what:'',trigger:'',need:'',need_done:'FALSE',details:'',order:''}, m||{}, defaults||{});
-  $('#dTags').innerHTML='<span class="pill">'+(isNew?'Новая карточка':'Редактирование')+'</span>';
-  $('#dName').textContent=isNew?'Добавить модель / бота':'Редактировать';
-  $('#dBody').innerHTML=
-   '<div class="frm">'+
-    '<div class="f-row"><label>Сегмент<select id="f_segment">'+opts(SEG_IDS,id=>metaOf(id).name,d.segment)+'</select></label>'+
-                       '<label>Этап<select id="f_stage">'+opts(STAGE_IDS,id=>(STAGES.find(s=>s.id===id)||{}).title||id,d.stage)+'</select></label></div>'+
-    '<div class="f-row"><label>Тип<select id="f_type">'+opts(TYPE_IDS,id=>TYPE[id].label,d.type)+'</select></label>'+
-                       '<label>Статус<select id="f_status">'+opts(STATUS_IDS,id=>STATUS[id].label,d.status)+'</select></label></div>'+
-    '<label>Название<input id="f_name" type="text" value="'+esc(d.name)+'"></label>'+
-    '<label>Что делает<textarea id="f_what" rows="3">'+esc(d.what)+'</textarea></label>'+
-    '<label>Когда срабатывает<textarea id="f_trigger" rows="2">'+esc(d.trigger)+'</textarea></label>'+
-    '<label>Статус / что нужно<textarea id="f_need" rows="2">'+esc(d.need)+'</textarea></label>'+
-    '<label class="f-check"><input type="checkbox" id="f_done"'+(isTrue(d.need_done)?' checked':'')+'> Готово / в проде (зелёная плашка)</label>'+
-    '<label>Детали <span class="f-hint">Параметр::Значение;;Параметр::Значение</span><textarea id="f_details" rows="2">'+esc(d.details)+'</textarea></label>'+
-    '<label>Порядок в колонке<input id="f_order" type="number" value="'+esc(d.order)+'"></label>'+
-    '<div class="f-actions"><button class="btn-primary" id="saveBtn">'+(isNew?'Добавить':'Сохранить')+'</button>'+
-      '<button class="btn-ghost" id="cancelBtn">Отмена</button>'+
-      (isNew?'':'<button class="btn-danger" id="delBtn">Удалить</button>')+'</div>'+
-   '</div>';
-  $('#cancelBtn').onclick=()=> m?openView(Object.assign({},d)):closeDrawer();
-  $('#saveBtn').onclick=async()=>{
-    const row={segment:val('f_segment'),stage:val('f_stage'),type:val('f_type'),status:val('f_status'),
-      name:val('f_name').trim(),what:val('f_what'),trigger:val('f_trigger'),need:val('f_need'),
-      need_done:$('#f_done').checked?'TRUE':'FALSE',details:val('f_details'),order:val('f_order')};
-    if(!row.name){toast('Впиши название');return;}
-    if(!isNew)row.id=d.id;
-    setBusy('#saveBtn',true,isNew?'Добавляю…':'Сохраняю…');
-    try{rows=await apiWrite(isNew?'create':'update',{row});render();closeDrawer();toast(isNew?'Добавлено':'Сохранено');}
-    catch(err){toast('Ошибка: '+err.message);setBusy('#saveBtn',false,isNew?'Добавить':'Сохранить');}
-  };
-  if(!isNew)$('#delBtn').onclick=async()=>{
-    if(!confirm('Удалить «'+d.name+'»? Строка пропадёт из таблицы.'))return;
-    setBusy('#delBtn',true,'Удаляю…');
-    try{rows=await apiWrite('delete',{id:d.id});render();closeDrawer();toast('Удалено');}
-    catch(err){toast('Ошибка: '+err.message);setBusy('#delBtn',false,'Удалить');}
-  };
-  openDrawer();
+tabs.onclick=e=>{const b=e.target.closest('[data-seg]');if(b){segment=b.dataset.seg;render()}};
+document.querySelector('.filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x===b));render()};
+async function load(){
+  try{
+    const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'read',token:TOKEN})});
+    const data=await res.json();if(!data.ok)throw Error(data.error||'Ошибка базы');
+    rows=data.rows||[];source.textContent='Актуальная база · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});render();
+  }catch(e){source.textContent='Не удалось загрузить базу: '+e.message;metrics.innerHTML='<div class="metric"><div class="caption">Откройте файл через веб-сервер или проверьте доступ к Apps Script.</div></div>';render()}
 }
-function setBusy(sel,b,txt){const el=$(sel);if(!el)return;el.disabled=b;if(txt)el.textContent=txt;const o=$('#saveBtn'),c=$('#cancelBtn'),dd=$('#delBtn');[o,c,dd].forEach(x=>{if(x&&x!==el)x.disabled=b;});}
-
-/* ---------- drawer open/close ---------- */
-function openDrawer(){$('#drawer').classList.add('open');$('#scrim').classList.add('open');}
-function closeDrawer(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open');}
-$('#drawerClose').onclick=closeDrawer;$('#scrim').onclick=closeDrawer;
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();});
-
-/* ---------- controls ---------- */
-$('#filters').addEventListener('click',e=>{const b=e.target.closest('.filter-btn');if(!b)return;filterMode=b.dataset.f;document.querySelectorAll('.filter-btn').forEach(x=>x.classList.toggle('on',x===b));render();});
-$('#refreshBtn').onclick=()=>load(true);
-$('#addBtn').onclick=()=>openEdit(null);
-$('#editLink').href=SHEET_EDIT_URL;
-
-/* ---------- init ---------- */
-render();
-load(false);
-</script>
-</body>
-</html>
+load();
+</script></body></html>
