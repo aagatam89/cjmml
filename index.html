@@ -23,6 +23,15 @@ h1{font-size:30px;line-height:1.15;margin:7px 0 8px}.intro{max-width:900px;color
 .top{display:flex;align-items:center;gap:7px}.tag{font-size:9px;text-transform:uppercase;letter-spacing:.07em;color:#fff;background:#4f5967;border-radius:5px;padding:2px 6px}.dot{width:8px;height:8px;border-radius:50%;margin-left:auto}.name{font-size:14px;font-weight:800;line-height:1.25;margin:8px 0}
 .status{font-size:11px;color:var(--soft)}.facts{border-top:1px solid #18202c12;margin-top:9px;padding-top:8px;display:grid;gap:7px}.fact{font-size:12px;color:var(--soft)}.fact strong{color:var(--ink)}
 .reach{margin-top:9px;display:inline-flex;background:#ffffffb8;border:1px solid #18202c10;border-radius:7px;padding:4px 8px;font-size:11px;font-weight:700}
+.card{cursor:pointer;transition:.16s}.card:hover{transform:translateY(-2px);box-shadow:0 7px 22px #18202c15}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.action,.primary,.danger{border:1px solid #cfd5dd;background:#fff;border-radius:9px;padding:9px 13px;font:600 12px Onest;cursor:pointer;text-decoration:none;color:var(--ink)}
+.primary{background:var(--ink);border-color:var(--ink);color:#fff}.danger{color:#b43a31;border-color:#edc5c1;margin-left:auto}
+.scrim{position:fixed;inset:0;background:#11182755;opacity:0;pointer-events:none;transition:.2s;z-index:10}.scrim.on{opacity:1;pointer-events:auto}
+.drawer{position:fixed;right:0;top:0;width:470px;max-width:95vw;height:100%;background:#fff;z-index:20;box-shadow:-12px 0 40px #11182728;transform:translateX(102%);transition:.25s;display:flex;flex-direction:column}.drawer.on{transform:none}
+.drawer-head{padding:20px 22px 15px;border-bottom:1px solid var(--line);position:relative}.drawer-head h2{font-size:20px;margin:9px 36px 0 0;line-height:1.25}.close{position:absolute;right:17px;top:17px;border:0;background:var(--bg);border-radius:8px;width:32px;height:32px;cursor:pointer}
+.drawer-body{padding:20px 22px;overflow:auto}.field{margin-bottom:17px}.field-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:#939ba7;margin-bottom:5px}.field-value{line-height:1.55}.result-box{border-radius:10px;padding:11px 12px;background:#fff8e8;border:1px solid #eedcae}
+.form label{display:block;font-size:12px;font-weight:600;color:var(--soft);margin-bottom:12px}.form input,.form textarea,.form select{display:block;width:100%;margin-top:5px;padding:9px 10px;border:1px solid #cfd5dd;border-radius:8px;background:#fff;font:13px Onest;color:var(--ink)}.form textarea{resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-actions{display:flex;gap:8px;margin-top:18px}.hint{font-size:10px;font-weight:400;color:#9aa1ac}
 .empty{color:#9aa1ac;font-size:12px;border:1px dashed #ccd2da;border-radius:10px;padding:12px}.note{margin-top:16px;color:#858d99;font-size:12px}
 @media(max-width:900px){.hero,.board{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.col+.col{border-left:0;border-top:1px dashed var(--line);padding:14px 0 0}.toolbar{align-items:flex-start;flex-direction:column}}
 </style>
@@ -39,11 +48,13 @@ h1{font-size:30px;line-height:1.15;margin:7px 0 8px}.intro{max-width:900px;color
   <nav class="tabs" id="tabs"></nav>
   <div class="toolbar">
     <div class="filters"><button class="filter on" data-filter="all">Все</button><button class="filter" data-filter="gap">Что внедрить</button></div>
-    <div class="source" id="source">Загружаю актуальные данные…</div>
+    <div class="actions"><span class="source" id="source">Загружаю актуальные данные…</span><button class="primary" id="add">＋ Добавить</button><a class="action" href="https://docs.google.com/spreadsheets/d/1zcgSjI5zD7TguYItZIAWjvYZD5QzVyacsnWZojfq0F8/edit?gid=2064400045#gid=2064400045" target="_blank">Открыть таблицу</a><button class="action" id="refresh">↻ Обновить</button></div>
   </div>
   <section class="board" id="board"></section>
   <div class="note">Охват считается корректно только после заполнения поля reach в базе. Значения разных механик нельзя складывать без дедупликации пользователей.</div>
 </main>
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer"><div class="drawer-head"><button class="close" id="close">✕</button><div id="drawerTags"></div><h2 id="drawerTitle"></h2></div><div class="drawer-body" id="drawerBody"></div></aside>
 <script>
 const API='https://script.google.com/macros/s/AKfycbxp4Yicws0Es3QvYoqbpUXppw6-cnU9U6omD65PX9kE7es-nxGhzOUiide6dGl8OYAoAg/exec';
 const TOKEN='CHANGE_ME_secret';
@@ -51,7 +62,7 @@ const META={ml:{name:'M / L',desc:'Средний и крупный'},sxs:{name:
 const STAGES=[['pre','01','До размещения'],['submit','02','Этап подачи'],['active','03','Период размещения'],['complete','04','Завершение / продление']];
 const TYPES={ml:'ML',bot:'Колл-бот',kc:'КЦ',crm:'CRM / промо'};
 const STATUS={live:['Готово','#269354'],inwork:['В работе','#d89e21'],almost:['Почти готов','#3f72b8'],planned:['Планируется','#99a1ad']};
-let rows=[],segment='ml',filter='all';
+let rows=[],segment='ml',filter='all',connected=false,current=null;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const brief=(s,n=118)=>{s=String(s||'Уточняется');return s.length>n?s.slice(0,n-1)+'…':s};
 function render(){
@@ -76,19 +87,45 @@ function card(m){
   const expectation=m.expectation||m.what||'Уточняется';
   const result=m.result||m.need||'Уточняется';
   const reach=m.reach||'Охват уточняется';
-  return '<article class="card" data-type="'+esc(m.type)+'"><div class="top"><span class="tag">'+esc(TYPES[m.type]||m.type)+'</span><span class="dot" style="background:'+st[1]+'"></span></div>'+
+  return '<article class="card" data-key="'+rows.indexOf(m)+'" data-type="'+esc(m.type)+'"><div class="top"><span class="tag">'+esc(TYPES[m.type]||m.type)+'</span><span class="dot" style="background:'+st[1]+'"></span></div>'+
    '<div class="name">'+esc(m.name)+'</div><div class="status">'+esc(st[0])+'</div>'+
    '<div class="facts"><div class="fact"><strong>Ожидание:</strong> '+esc(brief(expectation))+'</div><div class="fact"><strong>Результат:</strong> '+esc(brief(result))+'</div></div>'+
    '<div class="reach">◉ '+esc(reach)+'</div></article>';
 }
+function openDrawer(){drawer.classList.add('on');scrim.classList.add('on')}
+function closeDrawer(){drawer.classList.remove('on');scrim.classList.remove('on');current=null}
+function field(label,value,box=false){return '<div class="field"><div class="field-label">'+esc(label)+'</div><div class="'+(box?'result-box':'field-value')+'">'+esc(value)+'</div></div>'}
+function showCard(m){
+ current=m;const st=STATUS[m.status]||STATUS.planned;
+ drawerTags.innerHTML='<span class="tag">'+esc(TYPES[m.type]||m.type)+'</span> <span class="status">'+esc(st[0])+'</span>';drawerTitle.textContent=m.name;
+ const stage=STAGES.find(x=>x[0]===m.stage)?.[2]||m.stage;
+ drawerBody.innerHTML=field('Этап клиентского пути',stage)+field('Что делает',m.what||'—')+field('Когда срабатывает',m.trigger||'—')+field('Ожидание',m.expectation||m.what||'Уточняется')+field('Результат',m.result||m.need||'Уточняется',true)+field('Охват пользователей',m.reach||'Уточняется')+field('Статус / что нужно',m.need||'—')+'<div class="form-actions"><button class="primary" id="edit">Редактировать</button></div>';
+ edit.onclick=()=>showForm(m);openDrawer();
+}
+function options(obj,selected){return Object.entries(obj).map(([v,t])=>'<option value="'+v+'"'+(v===selected?' selected':'')+'>'+esc(Array.isArray(t)?t[0]:t)+'</option>').join('')}
+function input(label,name,value,hint=''){return '<label>'+label+(hint?' <span class="hint">'+hint+'</span>':'')+'<input name="'+name+'" value="'+esc(value||'')+'"></label>'}
+function area(label,name,value,hint=''){return '<label>'+label+(hint?' <span class="hint">'+hint+'</span>':'')+'<textarea name="'+name+'" rows="3">'+esc(value||'')+'</textarea></label>'}
+function showForm(m){
+ const fresh=!m,d=Object.assign({segment,stage:'active',type:'ml',status:'inwork',name:'',what:'',trigger:'',expectation:'',result:'',reach:'',need:'',order:''},m||{});
+ drawerTags.innerHTML='<span class="status">'+(fresh?'Новая карточка':'Редактирование')+'</span>';drawerTitle.textContent=fresh?'Добавить механику':'Редактировать';
+ drawerBody.innerHTML='<form class="form" id="form"><div class="row"><label>Сегмент<select name="segment">'+options(Object.fromEntries(Object.entries(META).map(([k,v])=>[k,v.name])),d.segment)+'</select></label><label>Этап<select name="stage">'+options(Object.fromEntries(STAGES.map(x=>[x[0],x[2]])),d.stage)+'</select></label></div><div class="row"><label>Тип<select name="type">'+options(TYPES,d.type)+'</select></label><label>Статус<select name="status">'+options(STATUS,d.status)+'</select></label></div>'+input('Название','name',d.name)+area('Что делает','what',d.what)+area('Когда срабатывает','trigger',d.trigger)+area('Ожидание','expectation',d.expectation,'Какое поведение хотим изменить')+area('Результат','result',d.result,'Факт, эффект теста или статус измерения')+input('Охват пользователей','reach',d.reach,'Например: 35 тыс. в месяц / 20% сегмента')+area('Статус / что нужно','need',d.need)+input('Порядок','order',d.order)+'<div class="form-actions"><button class="primary" type="submit">'+(fresh?'Добавить':'Сохранить')+'</button><button class="action" type="button" id="cancel">Отмена</button>'+(fresh?'':'<button class="danger" type="button" id="delete">Удалить</button>')+'</div></form>';
+ form.onsubmit=async e=>{e.preventDefault();const row=Object.fromEntries(new FormData(form));if(!row.name.trim())return alert('Укажите название');if(!fresh)row.id=d.id;await write(fresh?'create':'update',{row});closeDrawer()};
+ cancel.onclick=()=>fresh?closeDrawer():showCard(d);if(!fresh)document.getElementById('delete').onclick=async()=>{if(confirm('Удалить «'+d.name+'»?')){await write('delete',{id:d.id});closeDrawer()}};openDrawer();
+}
+async function write(action,payload){
+ if(!connected)return alert('Нет подключения к базе');
+ const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({action,token:TOKEN},payload))});const data=await res.json();if(!data.ok)return alert(data.error||'Ошибка записи');rows=data.rows||[];render();
+}
 tabs.onclick=e=>{const b=e.target.closest('[data-seg]');if(b){segment=b.dataset.seg;render()}};
+board.onclick=e=>{const el=e.target.closest('.card');if(el)showCard(rows[+el.dataset.key])};
 document.querySelector('.filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(!b)return;filter=b.dataset.filter;document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('on',x===b));render()};
+close.onclick=scrim.onclick=closeDrawer;document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer()});add.onclick=()=>showForm(null);refresh.onclick=load;
 async function load(){
   try{
     const res=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'read',token:TOKEN})});
     const data=await res.json();if(!data.ok)throw Error(data.error||'Ошибка базы');
-    rows=data.rows||[];source.textContent='Актуальная база · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});render();
-  }catch(e){source.textContent='Не удалось загрузить базу: '+e.message;metrics.innerHTML='<div class="metric"><div class="caption">Откройте файл через веб-сервер или проверьте доступ к Apps Script.</div></div>';render()}
+    rows=data.rows||[];connected=true;source.textContent='Актуальная база · '+new Date().toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});render();
+  }catch(e){connected=false;source.textContent='Не удалось загрузить базу: '+e.message;metrics.innerHTML='<div class="metric"><div class="caption">Откройте файл через веб-сервер или проверьте доступ к Apps Script.</div></div>';render()}
 }
 load();
 </script></body></html>
